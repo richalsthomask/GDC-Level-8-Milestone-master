@@ -1,0 +1,218 @@
+{% extends 'base.html'%}
+
+{%block title%}Update Task{%endblock%}
+
+{%block content%}
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 1rem;
+        "
+      >
+        <a href="/all_tasks">
+          <img
+            style="height: 1.5rem"
+            src="https://img.icons8.com/ios-filled/50/000000/back.png"
+          />
+        </a>
+        <p style="font-size: 35px; font-weight: 600">Update Todo</p>
+      </div>
+
+      {{ form.non_field_errors }}
+
+      <form style="margin-top: 2rem" method="post">
+        {% csrf_token %}
+
+        <div style="display: flex; flex-direction: column; gap: 0.3rem">
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              width: 100%;
+              justify-content: space-between;
+              align-items: end;
+            "
+          >
+            <label
+              for="{{ form.title.id_for_label }}"
+              style="font-weight: 300; font-size: 1rem"
+            >
+              Title
+            </label>
+            <span style="font-weight: 200; font-size: 0.7rem; color: red">
+              {{ form.title.errors }}
+            </span>
+          </div>
+          <input
+            name="title"
+            type="text"
+            value="{{ form.title.value }}"
+            style="
+              background-color: #f1f5f9;
+              padding: 0.5rem;
+              border: 0;
+              border-radius: 0.375rem;
+            "
+          />
+          <span style="font-weight: 200; font-size: 0.7rem">
+            {{ form.title.help_text }}
+          </span>
+        </div>
+
+        <div
+          style="
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              width: 100%;
+              justify-content: space-between;
+              align-items: end;
+            "
+          >
+            <label
+              for="{{ form.description.id_for_label }}"
+              style="font-weight: 300; font-size: 1rem"
+            >
+              Description
+            </label>
+            <span style="font-weight: 200; font-size: 0.7rem; color: red">
+              {{ form.description.errors }}
+            </span>
+          </div>
+          <textarea
+            name="description"
+            type="text"
+            style="
+              background-color: #f1f5f9;
+              padding: 0.5rem;
+              border: 0;
+              border-radius: 0.375rem;
+              height: 8rem;
+            "
+          >
+{{ form.description.value }}
+           </textarea
+          >
+          <span style="font-weight: 200; font-size: 0.7rem">
+            {{ form.description.help_text }}
+          </span>
+        </div>
+
+        <div
+          style="
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              width: 100%;
+              justify-content: space-between;
+              align-items: end;
+            "
+          >
+            <label
+              for="{{ form.priority.id_for_label }}"
+              style="font-weight: 300; font-size: 1rem"
+            >
+              Priority
+            </label>
+            <span style="font-weight: 200; font-size: 0.7rem; color: red">
+              {{ form.priority.errors }}
+            </span>
+          </div>
+          <input
+            name="priority"
+            type="number"
+            value="{{ form.priority.value }}"
+            style="
+              background-color: #f1f5f9;
+              padding: 0.5rem;
+              border: 0;
+              border-radius: 0.375rem;
+            "
+          />
+          <span style="font-weight: 200; font-size: 0.7rem">
+            {{ form.priority.help_text }}
+          </span>
+        </div>
+
+        <div
+          style="
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              width: 100%;
+              justify-content: space-between;
+              align-items: end;
+            "
+          >
+            <label
+              for="{{ form.status.id_for_label }}"
+              style="font-weight: 300; font-size: 1rem"
+            >
+              Status
+            </label>
+            <span style="font-weight: 200; font-size: 0.7rem; color: red">
+              {{ form.status.errors }}
+            </span>
+          </div>
+          <select
+            name="status"
+            style="
+              background-color: #f1f5f9;
+              padding: 0.5rem;
+              border: 0;
+              border-radius: 0.375rem;
+            "
+          >
+            {% for option in form.status.field.choices%} 
+            {% if option.0 in form.status.value %}
+            <option value="{{ option.0 }}" selected>{{ option.1 }}</option>
+            {% else %}
+            <option value="{{ option.0 }}">{{ option.1 }}</option>
+            {% endif %} {% endfor %}
+          </select>
+
+          <span style="font-weight: 200; font-size: 0.7rem">
+            {{ form.status.help_text }}
+          </span>
+        </div>
+
+        <input
+          type="submit"
+          value="Update Todo"
+          style="
+            margin-top: 2rem;
+            background-color: #ef4444;
+            width: 100%;
+            border-radius: 0.375rem;
+            color: white;
+            border: 0;
+            padding: 0.6rem;
+            cursor: pointer;
+          "
+        />
+      </form>
+      
+{% endblock%}

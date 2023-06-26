@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+<div
+style="
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+"
+>
+<p style="font-size: 35px; font-weight: 600">
+  Hi {{ user.get_username }}
+</p>
+<a href="/logout" style="color: red; text-decoration-line: none">
+  Log out
+</a>
+</div>
+   {% block loggedin_content%} {% endblock%}
+{% endblock %}
