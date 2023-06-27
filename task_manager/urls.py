@@ -18,6 +18,7 @@ from tasks.views import (
     UserLoginView,
     GenericTaskDetailView,
     GenericCompletedTasksView,
+    GenericClientUpdateView
 )
 
 router = SimpleRouter()
@@ -31,6 +32,7 @@ urlpatterns = [
     path("signup", UserCreateView.as_view()),
     path("login", UserLoginView.as_view()),
     path("logout", LogoutView.as_view()),
+    path("update_client/<pk>",GenericClientUpdateView.as_view()),
     # Add all your views here
     path("tasks/", GenericTaskVew.as_view()),
     path("create_task", GenericTaskCreateView.as_view()),

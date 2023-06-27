@@ -1,23 +1,43 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %} {% block title %}
+  Tasks
+{% endblock %} {% block content %}
+  <div>
+    <div style="
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    ">
+      <p style="font-size: 35px; font-weight: 600">Hi {{ user.get_username }}</p>
 
-{% block title %}Tasks{% endblock %}
+      <div style="display: flex; flex-direction: row; align-items: center; gap: 2rem">
+        <a href="/logout" style="color: red; text-decoration-line: none">Log out</a>
+      </div>
+    </div>
+    <div style="
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: -1.5rem;
+      margin-bottom: 1.5rem;
+    ">
+      <p style="
+        color: #475569;
+        font-size: 0.9rem;
+      ">Daily Email report time is {{ client.daily_email_time }}</p>
+      <a href="/update_client/{{client.id}}" style="
+        color: blue;
+        text-decoration-line: none;
+      ">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke='currentColor' xmlns="http://www.w3.org/2000/svg">
+        <path d="M14.1667 2.5C14.3856 2.28113 14.6455 2.10752 14.9314 1.98906C15.2174 1.87061 15.5239 1.80965 15.8334 1.80965C16.1429 1.80965 16.4494 1.87061 16.7354 1.98906C17.0214 2.10752 17.2812 2.28113 17.5001 2.5C17.719 2.71887 17.8926 2.97871 18.011 3.26468C18.1295 3.55064 18.1904 3.85714 18.1904 4.16667C18.1904 4.4762 18.1295 4.7827 18.011 5.06866C17.8926 5.35463 17.719 5.61447 17.5001 5.83334L6.25008 17.0833L1.66675 18.3333L2.91675 13.75L14.1667 2.5Z"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+    </div>
+  </div>
+  {% block loggedin_content %}
 
-{% block content %}
-<div
-style="
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-"
->
-<p style="font-size: 35px; font-weight: 600">
-  Hi {{ user.get_username }}
-</p>
-<a href="/logout" style="color: red; text-decoration-line: none">
-  Log out
-</a>
-</div>
-   {% block loggedin_content%} {% endblock%}
+  {% endblock %}
 {% endblock %}

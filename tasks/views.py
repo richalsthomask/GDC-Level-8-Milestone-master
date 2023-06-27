@@ -1,14 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
-from tasks.models import Task, TaskHistory
+from tasks.models import Task, TaskHistory, Client
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.forms import ModelForm, ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
+@receiver(post_save, sender=User)
+def create_user_picks(sender, instance, created, **kwargs):
+    if created:
+        Client.objects.create(user=instance)
 
 def priority_leeway_creater(priority):
     if Task.objects.filter(priority=priority).exists():
@@ -27,9 +34,30 @@ class UserCreateView(CreateView):
     success_url = "/login"
 
 
+
 class UserLoginView(LoginView):
     template_name = "signin.html"
     success_url = "/tasks/"
+
+
+class ClientUpdateForm(ModelForm):
+   
+    class Meta:
+        model = Client
+        fields = ["daily_email_time",'user','email']
+        
+class GenericClientUpdateView(UpdateView, AuthorisedTasks):
+    model = Client
+    template_name = "update_client.html"
+    form_class = ClientUpdateForm
+    success_url = "/all_tasks"
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
 
 
 class TaskCreateForm(ModelForm):
@@ -94,6 +122,12 @@ class GenericTaskVew(ListView, LoginRequiredMixin):
         if search:
             tasks = tasks.filter(title__icontains=search)
         return tasks
+    
+    def get_context_data(self, **kwargs):
+      data = super().get_context_data(**kwargs)
+      data['client'] = Client.objects.filter(user=self.request.user).first()
+      return data
+        
 
 
 class GenericTaskDetailView(DetailView, AuthorisedTasks):
@@ -114,6 +148,11 @@ class GenericCompletedTasksView(ListView, AuthorisedTasks):
         if search:
             tasks = tasks.filter(title__icontains=search)
         return tasks
+    
+    def get_context_data(self, **kwargs):
+      data = super().get_context_data(**kwargs)
+      data['client'] = Client.objects.filter(user=self.request.user).first()
+      return data
 
 
 def report_view(request):
@@ -122,15 +161,17 @@ def report_view(request):
         "report_view.html",
         {
             "tasks": Task.objects.filter(
-                deleted=False,
+                deleted=False,user=request.user
             ).order_by("priority"),
             "tasks_completed_line": str(
-                Task.objects.filter(deleted=False, status="COMPLETED").count()
+                Task.objects.filter(deleted=False, user=request.user,status="COMPLETED").count()
             )
             + " out of "
-            + str(Task.objects.filter(deleted=False).count()),
+            + str(Task.objects.filter(deleted=False,user=request.user).count()),
+            'client': Client.objects.filter(user=request.user).first()
         },
     )
+
 
 
 def delete_all(request):

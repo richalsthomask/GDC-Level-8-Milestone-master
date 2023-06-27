@@ -9,6 +9,10 @@ STATUS_CHOICES = [
     ["CANCELLED", "Cancelled"],
 ]
 
+class Client(models.Model):
+    daily_email_time = models.TimeField(null=True, blank=True,default='00:00:00')
+    email= models.EmailField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
 class Task(models.Model):
     title = models.CharField(max_length=100)
